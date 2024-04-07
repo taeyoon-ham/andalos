@@ -1,7 +1,13 @@
 package com.taeyoon.api.domain.user.creation;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
+
 import com.taeyoon.api.domain.user.dto.MemberDto;
 import com.taeyoon.api.domain.user.dto.UserDto;
+import com.taeyoon.api.domain.user.model.MemberEntity;
+import com.taeyoon.api.domain.user.model.enumclass.EnumMemberStatus;
+import com.taeyoon.api.infra.exception.client.EmailDuplicationException;
 import com.taeyoon.api.infra.persistence.UserRepositoryHelper;
 
 import lombok.extern.slf4j.Slf4j;
@@ -21,19 +27,20 @@ public class MemberEmailAccountCreation extends DefaultUserCreationFactory {
 
 		// user pk 중복 체크 (email)
 		log.info("이메일 중복 체크");
+		Optional<MemberEntity> memberOptional = repositoryHelper.getMemberRepository().findByEmail(dto.getEmail());
+		if (memberOptional.isPresent()) {
+			throw new EmailDuplicationException();
+		}
 
-		log.info("dto, {}", dto.toString());
+		log.info("dto, {}", dto);
+		MemberDto memberDto = (MemberDto)dto;
+		MemberEntity willSaveMember = repositoryHelper.getModelMapper().map(memberDto, MemberEntity.class);
+		willSaveMember.setStatusCode(EnumMemberStatus.APPROVED);
+		willSaveMember.setRegDate(LocalDateTime.now());
+		willSaveMember.setDelYn("N");
 
-		//        MemberEntity memberEntity = repository.getMemberRepository().save(MemberEntity.builder()
-		//                .statusCode(EnumMemberStatus.APPROVED)
-		//                .telNo("01035233696")
-		//                .email("mason8.ham@gmail.com")
-		//                .countryCode("+81")
-		//                .lastName("함")
-		//                .firstName("장수")
-		//                .build());
-		//        repository.getMemberRepository().save(memberEntity);
-		return MemberDto.builder().build();
+		MemberEntity memberEntity = repositoryHelper.getMemberRepository().save(willSaveMember);
+		return repositoryHelper.getModelMapper().map(memberEntity, MemberDto.class);
 	}
 
 }

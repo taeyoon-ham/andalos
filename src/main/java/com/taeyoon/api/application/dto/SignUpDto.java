@@ -46,4 +46,29 @@ public class SignUpDto implements Serializable {
 		@NotBlank(message = MessageConstants.ERROR_NOT_BLANK)
 		private String telNo;
 	}
+
+	@Builder
+	@Getter
+	@Setter
+	@NoArgsConstructor
+	@AllArgsConstructor
+	@ToString
+	@Schema(title = "회원가입 요청")
+	public static class ResSignUp implements Serializable {
+		@Schema(description = "계정제공자", requiredMode = Schema.RequiredMode.REQUIRED, example = "EMAIL, KAKAO")
+		private String provider;
+		@Schema(description = "로그인ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "example@gmail.com")
+		private String loginId;
+		@Schema(description = "비밀번호", requiredMode = Schema.RequiredMode.REQUIRED, example = "12343")
+		private String password;
+
+		@Schema(description = "이름", requiredMode = Schema.RequiredMode.REQUIRED, example = "길동")
+		private String firstName;
+		@Schema(description = "성", requiredMode = Schema.RequiredMode.REQUIRED, example = "홍")
+		private String lastName;
+		@Schema(description = "국가코드", requiredMode = Schema.RequiredMode.REQUIRED, example = "+82")
+		private String countryCode;
+		@Schema(description = "전화번호", requiredMode = Schema.RequiredMode.REQUIRED, example = "01011112222")
+		private String telNo;
+	}
 }

@@ -1,50 +1,68 @@
 package com.taeyoon.api.domain.user.model;
 
-import com.taeyoon.api.domain.user.dto.UserDto;
-import jakarta.persistence.Column;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import com.taeyoon.api.domain.user.dto.UserDto;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+
+@SuperBuilder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@MappedSuperclass
 public class BaseEntity implements Serializable {
 
-    @Column(name = "DEL_YN")
-    protected String delYn;
+	@Column(name = "DEL_YN")
+	protected String delYn;
 
-    @CreationTimestamp
-    @Column(name = "CREATED_BY")
-    protected Long createdBy;
+	@Column(name = "CREATED_BY")
+	protected Long createdBy;
 
-    @Column(name = "CREATED_DATE")
-    protected LocalDateTime createdDate;
+	@CreationTimestamp
+	@Column(name = "CREATED_DATE")
+	protected LocalDateTime createdDate;
 
-    @UpdateTimestamp
-    @Column(name = "LAST_MODIFIED_BY")
-    protected Long lastModifiedBy;
+	@Column(name = "LAST_MODIFIED_BY")
+	protected Long lastModifiedBy;
 
-    @Column(name = "LAST_MODIFIED_DATE")
-    protected LocalDateTime lastModifiedDate;
+	@UpdateTimestamp
+	@Column(name = "LAST_MODIFIED_DATE")
+	protected LocalDateTime lastModifiedDate;
 
-    @PrePersist // insert 직전
-    public void prePersist() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDto user = (UserDto)authentication.getPrincipal();
-        long userId = user == null ? 0L : user.getId();
-        if (this.createdBy == null) this.createdBy = userId;
-        if (this.lastModifiedBy == null) this.lastModifiedBy = userId;
-        if (this.delYn == null) this.delYn = "N";
-    }
+	@PrePersist // insert 직전
+	public void prePersist() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Object principal = authentication.getPrincipal();
+		long userId = 0;
+		if (principal instanceof UserDto user) {
+			userId = user.getId();
+		}
+		if (this.createdBy == null)
+			this.createdBy = userId;
+		if (this.lastModifiedBy == null)
+			this.lastModifiedBy = userId;
+	}
 
-    @PreUpdate // update 직전
-    public void preUpdate() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDto user = (UserDto)authentication.getPrincipal();
-        this.lastModifiedBy = user == null ? 0L : user.getId();
-    }
+	@PreUpdate // update 직전
+	public void preUpdate() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserDto user = (UserDto)authentication.getPrincipal();
+		this.lastModifiedBy = user == null ? 0L : user.getId();
+	}
 }

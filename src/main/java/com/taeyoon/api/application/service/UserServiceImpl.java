@@ -4,6 +4,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.taeyoon.api.application.dto.SignUpDto;
 import com.taeyoon.api.domain.user.creation.MemberEmailAccountCreation;
@@ -14,19 +15,17 @@ import com.taeyoon.api.domain.user.dto.MemberDto;
 import com.taeyoon.api.domain.user.model.enumclass.EnumAccountProvider;
 import com.taeyoon.api.infra.persistence.UserRepositoryHelper;
 
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 class UserServiceImpl implements UserService, UserDetailsService {
 	private final UserRepositoryHelper userRepositoryHelper;
 
 	@Override
-	public void create(SignUpDto.ReqSignUp req) {
+	public SignUpDto.ResSignUp create(SignUpDto.ReqSignUp req) {
 		UserCreationFactory userCreationFactory;
-
 		EnumAccountProvider accountProvider = EnumAccountProvider.valueOf(req.getProvider());
 		switch (accountProvider) {
 			case EnumAccountProvider.KAKAO ->
@@ -35,8 +34,10 @@ class UserServiceImpl implements UserService, UserDetailsService {
 				userCreationFactory = new MemberGoogleAccountCreation(userRepositoryHelper);
 			default -> userCreationFactory = new MemberEmailAccountCreation(userRepositoryHelper);
 		}
-
-		userCreationFactory.create(MemberDto.builder().build());
+		MemberDto member = userRepositoryHelper.getModelMapper().map(req, MemberDto.class);
+		member.setEmail(req.getLoginId());
+		userCreationFactory.create(member);
+		return SignUpDto.ResSignUp.builder().build();
 	}
 
 	@Override

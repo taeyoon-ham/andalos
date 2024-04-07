@@ -1,9 +1,12 @@
 package com.taeyoon.api.infra.exception;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,145 +34,55 @@ import lombok.extern.slf4j.Slf4j;
 public class GlobalControllerExceptionHandler {
 	private final HttpServletRequest request;
 
-	@ExceptionHandler({BadRequestException.class, IllegalArgumentException.class})
+	@ExceptionHandler({BadRequestException.class})
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
-	public ResponseEntity<ErrorResponse> badRequestException(RuntimeException ex) {
-		return res(ex.getClass().getSimpleName(), ex.getMessage(), HttpStatus.BAD_REQUEST);
+	public ResponseEntity<EntityModel<ErrorResponse>> badRequestException(BadRequestException ex) {
+		return res(ex.getClass().getSimpleName(), ex.getMessage(), HttpStatus.BAD_REQUEST, ex.getLinkList());
+	}
+
+	@ExceptionHandler({IllegalArgumentException.class})
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+	public ResponseEntity<EntityModel<ErrorResponse>> illegalArgumentException(IllegalArgumentException ex) {
+		return res(ex.getClass().getSimpleName(), ex.getMessage(), HttpStatus.BAD_REQUEST, null);
+	}
+
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ApiResponse(responseCode = "400", description = "Not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+	public ResponseEntity<EntityModel<ErrorResponse>> methodArgumentNotValidException(
+		final MethodArgumentNotValidException ex) {
+		String field = ((DefaultMessageSourceResolvable)Objects.requireNonNull(
+			ex.getBindingResult().getAllErrors().getFirst().getArguments())[0]).getDefaultMessage();
+		String message = ex.getBindingResult().getAllErrors().getFirst().getDefaultMessage();
+		return res(ex.getClass().getSimpleName(), "[" + field + "] " + message, HttpStatus.BAD_REQUEST, null);
 	}
 
 	@ExceptionHandler(NotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
-	public ResponseEntity<ErrorResponse> handleBookNotFound(RuntimeException ex) {
-		return res(ex.getClass().getSimpleName(), ex.getMessage(), HttpStatus.NOT_FOUND);
-	}
-
-	/*
-	"errors": [
-		{
-			"codes": [
-				"NotBlank.reqSignUp.telNo",
-				"NotBlank.telNo",
-				"NotBlank.java.lang.String",
-				"NotBlank"
-			],
-			"arguments": [
-				{
-					"codes": [
-						"reqSignUp.telNo",
-						"telNo"
-					],
-					"arguments": null,
-					"defaultMessage": "telNo",
-					"code": "telNo"
-				}
-			],
-			"defaultMessage": "필수입력 항목 입니다.",
-			"objectName": "reqSignUp",
-			"field": "telNo",
-			"rejectedValue": null,
-			"bindingFailure": false,
-			"code": "NotBlank"
-		},
-		{
-			"codes": [
-				"NotBlank.reqSignUp.lastName",
-				"NotBlank.lastName",
-				"NotBlank.java.lang.String",
-				"NotBlank"
-			],
-			"arguments": [
-				{
-					"codes": [
-						"reqSignUp.lastName",
-						"lastName"
-					],
-					"arguments": null,
-					"defaultMessage": "lastName",
-					"code": "lastName"
-				}
-			],
-			"defaultMessage": "필수입력 항목 입니다.",
-			"objectName": "reqSignUp",
-			"field": "lastName",
-			"rejectedValue": null,
-			"bindingFailure": false,
-			"code": "NotBlank"
-		},
-		{
-			"codes": [
-				"NotBlank.reqSignUp.firstName",
-				"NotBlank.firstName",
-				"NotBlank.java.lang.String",
-				"NotBlank"
-			],
-			"arguments": [
-				{
-					"codes": [
-						"reqSignUp.firstName",
-						"firstName"
-					],
-					"arguments": null,
-					"defaultMessage": "firstName",
-					"code": "firstName"
-				}
-			],
-			"defaultMessage": "필수입력 항목 입니다.",
-			"objectName": "reqSignUp",
-			"field": "firstName",
-			"rejectedValue": null,
-			"bindingFailure": false,
-			"code": "NotBlank"
-		},
-		{
-			"codes": [
-				"NotBlank.reqSignUp.countryCode",
-				"NotBlank.countryCode",
-				"NotBlank.java.lang.String",
-				"NotBlank"
-			],
-			"arguments": [
-				{
-					"codes": [
-						"reqSignUp.countryCode",
-						"countryCode"
-					],
-					"arguments": null,
-					"defaultMessage": "countryCode",
-					"code": "countryCode"
-				}
-			],
-			"defaultMessage": "필수입력 항목 입니다.",
-			"objectName": "reqSignUp",
-			"field": "countryCode",
-			"rejectedValue": null,
-			"bindingFailure": false,
-			"code": "NotBlank"
-		}
-	],
-	 */
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ApiResponse(responseCode = "400", description = "Not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
-	public ResponseEntity<ErrorResponse> methodArgumentNotValidException(final MethodArgumentNotValidException ex) {
-		String field = ((DefaultMessageSourceResolvable)Objects.requireNonNull(
-			ex.getBindingResult().getAllErrors().getFirst().getArguments())[0]).getDefaultMessage();
-		//        String message = MessageUtils.getMessage(ex.getBindingResult().getAllErrors().getFirst().getDefaultMessage(), MessageConstant.MESSAGE_ERROR_BAD_REQUEST);
-		String message = ex.getBindingResult().getAllErrors().getFirst().getDefaultMessage();
-		return res(ex.getClass().getSimpleName(), "[" + field + "] " + message, HttpStatus.BAD_REQUEST);
+	public ResponseEntity<EntityModel<ErrorResponse>> notFoundException(NotFoundException ex) {
+		return res(ex.getClass().getSimpleName(), ex.getMessage(), HttpStatus.NOT_FOUND, null);
 	}
 
 	@NotNull
-	private ResponseEntity<ErrorResponse> res(String error, String errorMessage, HttpStatus httpStatus) {
+	private ResponseEntity<EntityModel<ErrorResponse>> res(String error, String errorMessage, HttpStatus httpStatus,
+		List<Link> linkList) {
+		EntityModel<ErrorResponse> em = EntityModel.of(ErrorResponse.builder()
+			.timestamp(new Date())
+			.status(httpStatus.value())
+			.error(error)
+			.message(errorMessage)
+			.path(request.getRequestURI())
+			.build());
+		if (linkList != null) {
+			for (Link link : linkList) {
+				em.add(link);
+			}
+		}
 		return ResponseEntity.status(httpStatus.value())
 			.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-			.body(ErrorResponse.builder()
-				.timestamp(new Date())
-				.status(httpStatus.value())
-				.error(error)
-				.message(errorMessage)
-				.path(request.getRequestURI())
-				.build());
+			.body(em);
 	}
 }

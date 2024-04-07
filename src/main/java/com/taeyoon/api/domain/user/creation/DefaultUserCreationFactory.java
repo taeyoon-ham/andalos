@@ -10,12 +10,12 @@ import com.taeyoon.api.utils.MessageUtils;
 import io.jsonwebtoken.lang.Assert;
 
 abstract class DefaultUserCreationFactory implements UserCreationFactory {
-	protected final UserRepositoryHelper repository;
+	protected final UserRepositoryHelper repositoryHelper;
 	protected final ModelMapper modelMapper = new ModelMapper();
 	protected UserDto userDto;
 
-	public DefaultUserCreationFactory(UserRepositoryHelper repository) {
-		this.repository = repository;
+	public DefaultUserCreationFactory(UserRepositoryHelper repositoryHelper) {
+		this.repositoryHelper = repositoryHelper;
 	}
 
 	protected void validation() {
