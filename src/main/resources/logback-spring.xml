@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="10 seconds">
+
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+
+    <springProfile name="default, dev, prod">
+        <logger name="com.mysql.cj.jdbc.Driver" level=""/>
+        <logger name="jdbc" level="OFF"/>
+        <logger name="jdbc.sqlonly" level="OFF"/>
+        <logger name="jdbc.sqltiming" level="DEBUG"/>
+        <logger name="jdbc.audit" level="OFF"/>
+        <logger name="jdbc.resultset" level="OFF"/>
+        <logger name="jdbc.resultsettable" level="DEBUG"/>
+        <logger name="jdbc.connection" level="OFF"/>
+    </springProfile>
+
+    <springProfile name="dev, prod">
+        <include resource="logback/appender-file.xml" />
+        <root level="INFO">
+            <appender-ref ref="FILE" />
+        </root>
+    </springProfile>
+
+    <springProfile name="default, dev, prod">
+        <include resource="logback/appender-console.xml" />
+        <root level="INFO">
+            <appender-ref ref="CONSOLE" />
+        </root>
+    </springProfile>
+</configuration>

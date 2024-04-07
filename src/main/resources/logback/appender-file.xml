@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${LOG_FILE}.log</file>
+        <layout class="com.taeyoon.api.infra.configuration.MaskingPatternLayout">
+            <maskPattern>\"password\"\s*:\s*\"(.*?)\"</maskPattern> <!-- password JSON pattern -->
+            <maskPattern>\"passwd\"\s*:\s*\"(.*?)\"</maskPattern> <!-- passwd JSON pattern -->
+            <maskPattern>\"oldPasswd\"\s*:\s*\"(.*?)\"</maskPattern> <!-- oldPasswd JSON pattern -->
+            <pattern>%d{MM-dd HH:mm:ss.SSS} %clr(${LOG_LEVEL_PATTERN:-%5p}) [%t] %clr(%-40.40logger{39}){cyan} | %msg%n</pattern>
+        </layout>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${LOG_FILE}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>${LOG_FILE_MAX_SIZE:-10MB}</maxFileSize>
+            <maxHistory>${LOG_FILE_MAX_HISTORY:-0}</maxHistory>
+        </rollingPolicy>
+    </appender>
+</included>

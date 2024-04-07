@@ -1,0 +1,114 @@
+########################################################################################################################
+# ↓↓↓ global ↓↓↓
+########################################################################################################################
+spring:
+  application:
+    name: andalos
+  profiles:
+    default: dev
+  devtools:
+    livereload:
+      enabled: true # 정적 리소스에 변화가 있을 때 바로 반영한다.
+  datasource:
+    hikari:
+      maximum-pool-size: 10
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+  mvc:
+    path match:
+      matching-strategy: ant_path_matcher
+  thymeleaf:
+    suffix: .html
+    check-template-location: true
+  jpa:
+    open-in-view: false # view 가 rendering 될때까지 영속성 컨텍스트를 살려둘 것인가?
+    properties:
+      hibernate:
+        format_sql: true
+
+########################################################################################################################
+# ↑↑↑ global ↑↑↑
+########################################################################################################################
+---
+########################################################################################################################
+# ↓↓↓ dev ↓↓↓
+########################################################################################################################
+server:
+  port: 80
+  error:
+    include-stacktrace: never
+    path: '/error'
+    whitelabel:
+      enabled: false
+    include-exception: false
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+  thymeleaf:
+    cache: true
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    database: mysql
+  datasource:
+    andalos:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://${DB_URL}
+      username: ${DB_USER_NAME}
+      password: ${DB_USER_PASS}
+      pool-name: master-pool
+      minimum-idle: 3
+      maximum-pool-size: 5
+      idle-timeout: 300000
+      max-lifetime: 600000
+      initialization-mode: always
+      continue-on-error: true
+
+jwt:
+  default-secret-key: ${JWT_DEFAULT_SECRET_KEY}
+
+springdoc:
+  api-docs:
+    path: /api-docs
+    groups:
+      enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    groups-order: ASC
+    tags-sorter: alpha
+    operations-sorter: alpha
+    display-request-duration: true
+    doc-expansion: none
+  cache:
+    disabled: true
+  model-and-view-allowed: true
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql:
+              BasicBinder: trace
+  file:
+    path: D:\server-logs/logs/
+    name: andalos-api
+  pattern:
+    console: '\r'
+  logback:
+    rolling policy:
+      max-file-size: 100MB
+      max-history: 30
+      total-size-cap: 2GB
+      file-name-pattern: ${filePath}/${fileName}.log.%d{yyyy-MM-dd}.%i
