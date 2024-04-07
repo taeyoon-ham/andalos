@@ -16,10 +16,10 @@ public class MemberTokenFactory extends DefaultTokenFactory {
     private Integer durationSeconds; // 토큰 만료시간 (초) 설정
 
     @Override
-    protected Token create() {
+    protected AccessToken create() {
         Map<String, Object> claims = this.defaultClaimsMap();
         String token = JwtCustomProvider.createToken(claims, expiredDate, getSecretKey());
-        return Token.builder()
+        return AccessToken.builder()
                 .token(token)
                 .jti(jti)
                 .iss(getIss())
@@ -29,7 +29,7 @@ public class MemberTokenFactory extends DefaultTokenFactory {
     }
 
     @Override
-    public RefreshToken createRefreshToken(Token token) {
+    public RefreshToken createRefreshToken(AccessToken accessToken) {
         return null;
     }
 

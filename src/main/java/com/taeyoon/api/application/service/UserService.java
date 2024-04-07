@@ -1,6 +1,7 @@
 package com.taeyoon.api.application.service;
 
-public interface UserService {
+import com.taeyoon.api.application.dto.SignUpDto;
 
-    void create();
+public interface UserService {
+    void create(SignUpDto.ReqSignUp req);
 }

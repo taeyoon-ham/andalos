@@ -12,7 +12,7 @@ public abstract class DefaultTokenFactory implements TokenFactory {
     protected String jti;
     protected Date expiredDate;
     @Override
-    public Token createToken() {
+    public AccessToken createAccessToken() {
         // 1. jti 생성
         jti = makeJti();
         // 2. 만료시간 생성
@@ -42,7 +42,7 @@ public abstract class DefaultTokenFactory implements TokenFactory {
         claims.put("jti", jti);
         return claims;
     }
-    protected abstract Token create();
+    protected abstract AccessToken create();
     protected abstract String getIss();
 
     protected abstract String getAud();

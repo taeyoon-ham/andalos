@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="com.taeyoon.api.infra.configuration.MaskingPatternLayout">
+            <maskPattern>\"password\"\s*:\s*\"(.*?)\"</maskPattern> <!-- password JSON pattern -->
+            <maskPattern>\"passwd\"\s*:\s*\"(.*?)\"</maskPattern> <!-- passwd JSON pattern -->
+            <maskPattern>\"oldPasswd\"\s*:\s*\"(.*?)\"</maskPattern> <!-- oldPasswd JSON pattern -->
+            <pattern>%d{MM-dd HH:mm:ss.SSS} %clr(${LOG_LEVEL_PATTERN:-%5p}) [%t] %clr(%-40.40logger{39}){cyan} | %msg%n</pattern>
+        </layout>
+    </appender>
+</included>

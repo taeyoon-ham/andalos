@@ -1,8 +1,11 @@
 package com.taeyoon.api.domain.user.dto;
 
 
+import com.taeyoon.api.infra.constants.MessageConstants;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,6 +17,7 @@ import java.util.List;
 @SuperBuilder
 @Getter
 @Setter
+@ToString
 public class UserDto implements UserDetails {
     private Long id;
     private String firstName;

@@ -1,7 +1,7 @@
 package com.taeyoon.api.domain.user.dto;
 
 
-import com.taeyoon.api.domain.user.model.MemberStatus;
+import com.taeyoon.api.domain.user.model.enumclass.EnumMemberStatus;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
@@ -10,5 +10,5 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Setter
 public class AdminDto extends UserDto {
-    private MemberStatus statusCode;
+    private EnumMemberStatus statusCode;
 }

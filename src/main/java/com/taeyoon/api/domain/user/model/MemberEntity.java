@@ -1,5 +1,6 @@
 package com.taeyoon.api.domain.user.model;
 
+import com.taeyoon.api.domain.user.model.enumclass.EnumMemberStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -14,5 +15,5 @@ import lombok.experimental.SuperBuilder;
 public class MemberEntity extends UserEntity {
     @Column(name = "STATUS_CODE")
     @Enumerated(EnumType.STRING)
-    private MemberStatus statusCode;
+    private EnumMemberStatus statusCode;
 }

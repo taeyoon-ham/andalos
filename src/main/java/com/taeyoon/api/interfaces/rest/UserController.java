@@ -12,7 +12,4 @@ import org.springframework.stereotype.Component;
 public class UserController {
     private final UserRepositoryHelper userRepositoryHelper;
     private final UserService userService;
-    public void setUser() {
-        userService.create();
-    }
 }

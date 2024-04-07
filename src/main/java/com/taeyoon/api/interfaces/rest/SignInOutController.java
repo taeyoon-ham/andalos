@@ -24,7 +24,7 @@ public class SignInOutController extends CommonController {
 
     @Tag(name="회원인증 API")
     @Operation(summary = "로그인", description = "로그인을 합니다.")
-    @PostMapping(value = "/service/v1/sign-in", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/service/v1/sign-in", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SignInOutDto.ResSignIn> signIn(@RequestBody SignInOutDto.ReqSignIn req) {
         log.info("req={}, {}", req.getLoginId(), req.getPassword());
         return res(SignInOutDto.ResSignIn.builder().build());
