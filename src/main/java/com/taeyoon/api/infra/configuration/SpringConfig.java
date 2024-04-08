@@ -1,5 +1,7 @@
 package com.taeyoon.api.infra.configuration;
 
+import java.util.Locale;
+
 import org.modelmapper.AbstractCondition;
 import org.modelmapper.Condition;
 import org.modelmapper.ModelMapper;
@@ -8,10 +10,13 @@ import org.modelmapper.convention.NamingConventions;
 import org.modelmapper.spi.MappingContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.http.HttpMethod;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -81,6 +86,24 @@ public class SpringConfig implements WebMvcConfigurer {
 			.setDestinationNamingConvention(NamingConventions.NONE)
 			.setMatchingStrategy(MatchingStrategies.STRICT);
 		return modelMapper;
+	}
+
+	@Bean
+	public ReloadableResourceBundleMessageSource messageSource() {
+		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+		messageSource.setBasename("classpath:messages");
+		messageSource.setCacheSeconds(3600); // 1시간
+		messageSource.setDefaultLocale(Locale.ENGLISH); // message_en.properties 파일을 기본값으로 지정
+		return messageSource;
+	}
+
+	@Bean
+	public LocaleResolver localeResolver() {
+		// Accept-Language 헤더를 기반으로 로케일을 결정하는 LocaleResolver
+		AcceptHeaderLocaleResolver localeResolver = new AcceptHeaderLocaleResolver();
+		// 기본 로케일 설정 (선택 사항)
+		localeResolver.setDefaultLocale(Locale.ENGLISH);
+		return localeResolver;
 	}
 
 	// string blank condition

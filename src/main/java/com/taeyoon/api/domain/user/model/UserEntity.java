@@ -1,6 +1,7 @@
 package com.taeyoon.api.domain.user.model;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
@@ -47,7 +48,7 @@ public class UserEntity extends BaseEntity {
 	@Column(name = "TEL_NO")
 	private String telNo;
 	@Column(name = "REG_DATE")
-	private LocalDateTime regDate;
+	private Date regDate;
 	@Column(name = "LEAVE_DATE")
 	private LocalDateTime leaveDate;
 	@Column(name = "ACCOUNT_ID")

@@ -47,8 +47,7 @@ public class BaseEntity implements Serializable {
 
 	@PrePersist // insert 직전
 	public void prePersist() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Object principal = authentication.getPrincipal();
+		Object principal = getPrincipal();
 		long userId = 0;
 		if (principal instanceof UserDto user) {
 			userId = user.getId();
@@ -61,8 +60,17 @@ public class BaseEntity implements Serializable {
 
 	@PreUpdate // update 직전
 	public void preUpdate() {
+		Object principal = getPrincipal();
+		long userId = 0;
+		if (principal instanceof UserDto user) {
+			userId = user.getId();
+		}
+		if (this.lastModifiedBy == null)
+			this.lastModifiedBy = userId;
+	}
+
+	private Object getPrincipal() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		UserDto user = (UserDto)authentication.getPrincipal();
-		this.lastModifiedBy = user == null ? 0L : user.getId();
+		return authentication.getPrincipal();
 	}
 }

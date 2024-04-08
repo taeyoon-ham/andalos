@@ -6,7 +6,7 @@ import com.taeyoon.api.domain.user.model.MemberEntity;
 import com.taeyoon.api.domain.user.model.enumclass.EnumMemberStatus;
 import com.taeyoon.api.infra.persistence.UserRepositoryHelper;
 
-public class MemberGoogleAccountCreation extends DefaultUserCreationFactory {
+class MemberGoogleAccountCreation extends DefaultUserCreation {
 	public MemberGoogleAccountCreation(UserRepositoryHelper userRepositoryHelper) {
 		super(userRepositoryHelper);
 	}

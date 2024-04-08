@@ -6,7 +6,7 @@ import com.taeyoon.api.domain.user.model.MemberEntity;
 import com.taeyoon.api.domain.user.model.enumclass.EnumMemberStatus;
 import com.taeyoon.api.infra.persistence.UserRepositoryHelper;
 
-public class MemberKakaoAccountCreation extends DefaultUserCreationFactory {
+class MemberKakaoAccountCreation extends DefaultUserCreation {
 	public MemberKakaoAccountCreation(UserRepositoryHelper userRepositoryHelper) {
 		super(userRepositoryHelper);
 	}

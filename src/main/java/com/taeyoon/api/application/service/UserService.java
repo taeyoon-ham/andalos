@@ -3,5 +3,5 @@ package com.taeyoon.api.application.service;
 import com.taeyoon.api.application.dto.SignUpDto;
 
 public interface UserService {
-	SignUpDto.ResSignUp create(SignUpDto.ReqSignUp req);
+	SignUpDto.SignUpRes create(SignUpDto.SignUpReq req);
 }

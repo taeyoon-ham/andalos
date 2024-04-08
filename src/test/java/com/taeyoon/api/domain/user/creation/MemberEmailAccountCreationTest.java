@@ -1,77 +1,110 @@
 package com.taeyoon.api.domain.user.creation;
 
-import com.taeyoon.api.domain.user.dto.MemberDto;
-import com.taeyoon.api.domain.user.dto.UserDto;
-import com.taeyoon.api.infra.constants.MessageConstants;
-import com.taeyoon.api.infra.persistence.AdminRepository;
-import com.taeyoon.api.infra.persistence.MemberRepository;
-import com.taeyoon.api.infra.persistence.UserRepositoryHelper;
-import com.taeyoon.api.utils.MessageUtils;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.*;
+
+import java.util.Locale;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.transaction.annotation.Transactional;
+import org.modelmapper.ModelMapper;
+import org.springframework.context.i18n.LocaleContextHolder;
 
-import java.util.Locale;
+import com.taeyoon.api.domain.user.dto.AccountDto;
+import com.taeyoon.api.domain.user.dto.MemberDto;
+import com.taeyoon.api.domain.user.dto.UserDto;
+import com.taeyoon.api.domain.user.model.MemberEntity;
+import com.taeyoon.api.domain.user.model.enumclass.EnumAccountProvider;
+import com.taeyoon.api.infra.constants.MsgConsts;
+import com.taeyoon.api.infra.constants.MsgUtils;
+import com.taeyoon.api.infra.exception.client.InvalidArgumentException;
+import com.taeyoon.api.infra.persistence.AccountRepository;
+import com.taeyoon.api.infra.persistence.AdminRepository;
+import com.taeyoon.api.infra.persistence.MemberRepository;
+import com.taeyoon.api.infra.persistence.UserRepositoryHelper;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyIterable;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mockStatic;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Transactional
-@AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
 class MemberEmailAccountCreationTest {
 
-    @Mock
-    MemberRepository memberRepository;
-    @Mock
-    AdminRepository adminRepository;
-    static MockedStatic<Locale> localUtils = mockStatic(Locale.class);
-    static MockedStatic<MessageUtils> messageUtils = mockStatic(MessageUtils.class);
+	@Mock
+	MemberRepository memberRepository;
+	@Mock
+	AdminRepository adminRepository;
+	@Mock
+	AccountRepository accountRepository;
 
-    static UserDto dto;
+	@Mock
+	ModelMapper modelMapper;
 
-    @AfterAll
-    public static void afterAll(){
-        localUtils.close();
-        messageUtils.close();
-    }
+	static MockedStatic<LocaleContextHolder> localUtils = mockStatic(LocaleContextHolder.class);
+	static MockedStatic<MsgUtils> messageUtils = mockStatic(MsgUtils.class);
 
-    @BeforeAll
-    static void init() {
-        dto = MemberDto.builder()
-                .email("example@gmail.com")
-                .countryCode("+82")
-                .telNo("01035233696")
-                .lastName("홍")
-                .build();
-    }
+	static UserDto userDto;
+	static AccountDto accountDto;
 
-    @Test
-    void validation() {
-        String willErrorMessage = MessageConstants.ERROR_NOT_BLANK + " [firstName]";
-        given(Locale.getDefault()).willReturn(Locale.KOREA);
-        given(MessageUtils.getMessage(anyString(), anyString())).willReturn(willErrorMessage);
-        UserRepositoryHelper userRepositoryHelper = new UserRepositoryHelper(memberRepository, adminRepository);
-        UserCreationFactory userCreationFactory = new MemberEmailAccountCreation(userRepositoryHelper);
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> userCreationFactory.create(dto));
-        assertEquals(willErrorMessage, exception.getMessage());
-    }
+	@AfterAll
+	public static void afterAll() {
+		localUtils.close();
+		messageUtils.close();
+	}
 
-    @Test
-    void create() {
-        dto.setFirstName("길동");
-        UserRepositoryHelper userRepositoryHelper = new UserRepositoryHelper(memberRepository, adminRepository);
-        UserCreationFactory userCreationFactory = new MemberEmailAccountCreation(userRepositoryHelper);
-        userCreationFactory.create(dto);
-    }
+	@BeforeAll
+	static void init() {
+		userDto = MemberDto.builder()
+			.email("example@gmail.com")
+			.countryCode("+82")
+			.telNo("01035233696")
+			.lastName("홍")
+			.build();
+		accountDto = AccountDto.builder()
+			.loginId("example@gmail.com")
+			.password("12345")
+			.provider(EnumAccountProvider.EMAIL.toString())
+			.build();
+		userDto.setAccountDto(accountDto);
+	}
+
+	@Test
+	@Order(1)
+	@DisplayName("파라메터 유효청 체크 - firstName 에러발생")
+	void validation() {
+		String willErrorMessage = MsgConsts.ERROR_NOT_BLANK + " [firstName]";
+		given(LocaleContextHolder.getLocale()).willReturn(Locale.KOREA);
+		given(MsgUtils.getMessage(anyString(), anyString())).willReturn(willErrorMessage);
+		UserRepositoryHelper userRepositoryHelper = new UserRepositoryHelper(memberRepository, adminRepository,
+			accountRepository, modelMapper);
+		UserCreation userCreation = new MemberEmailAccountCreation(userRepositoryHelper);
+		InvalidArgumentException exception = assertThrows(InvalidArgumentException.class,
+			() -> userCreation.create(userDto));
+		assertEquals(willErrorMessage, exception.getMessage() + " " + exception.getMsgArgs()[0]);
+	}
+
+	@Test
+	@Order(2)
+	@DisplayName("정상처리")
+	void create() {
+		userDto.setFirstName("길동");
+		UserRepositoryHelper userRepositoryHelper = new UserRepositoryHelper(memberRepository, adminRepository,
+			accountRepository, modelMapper);
+		when(userRepositoryHelper.getMemberRepository().save(any())).thenReturn(MemberEntity.builder()
+			.id(1L)
+			.userTypeCode("TB_MEMBER")
+			.build());
+		UserCreation userCreation = new MemberEmailAccountCreation(userRepositoryHelper);
+		userCreation.create(userDto);
+	}
 }

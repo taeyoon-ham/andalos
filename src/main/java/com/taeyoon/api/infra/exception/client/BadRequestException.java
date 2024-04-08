@@ -4,26 +4,35 @@ import java.util.List;
 
 import org.springframework.hateoas.Link;
 
+import lombok.Getter;
+
+@Getter
 public class BadRequestException extends RuntimeException {
 
+	private final String[] msgArgs;
 	private final List<Link> linkList;
 
-	public BadRequestException(String msg) {
-		super(msg);
+	public BadRequestException(String msgKey) {
+		super(msgKey);
+		this.msgArgs = null;
 		this.linkList = null;
 	}
 
-	public BadRequestException(String msg, Throwable t) {
-		super(msg, t);
+	public BadRequestException(String msgKey, String... msgArgs) {
+		super(msgKey);
+		this.msgArgs = msgArgs;
 		this.linkList = null;
 	}
 
-	public BadRequestException(String msg, List<Link> linkList) {
-		super(msg);
+	public BadRequestException(String msgKey, List<Link> linkList) {
+		super(msgKey);
+		this.msgArgs = null;
 		this.linkList = linkList;
 	}
 
-	public List<Link> getLinkList() {
-		return linkList;
+	public BadRequestException(String msgKey, List<Link> linkList, String... msgArgs) {
+		super(msgKey);
+		this.msgArgs = msgArgs;
+		this.linkList = linkList;
 	}
 }

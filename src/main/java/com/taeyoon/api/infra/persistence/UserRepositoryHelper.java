@@ -12,5 +12,6 @@ import lombok.Getter;
 public class UserRepositoryHelper {
 	private final MemberRepository memberRepository;
 	private final AdminRepository adminRepository;
+	private final AccountRepository accountRepository;
 	private final ModelMapper modelMapper;
 }

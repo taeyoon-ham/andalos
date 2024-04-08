@@ -12,8 +12,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import com.taeyoon.api.infra.security.authentication.filter.JwtAuthenticationCustomFilter;
-import com.taeyoon.api.infra.security.authentication.provider.JwtCustomProvider;
+import com.taeyoon.api.infra.security.authentication.filter.CustomJwtAuthenticationFilter;
+import com.taeyoon.api.infra.security.authentication.provider.CustomJwtProvider;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,7 +25,7 @@ public class SecurityConfig {
 
 	@Value("${jwt.default-secret-key}")
 	private String SECRET_KEY = ""; // 32글자 이상
-	private final JwtCustomProvider jwtCustomProvider;
+	private final CustomJwtProvider customJwtProvider;
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -39,8 +39,8 @@ public class SecurityConfig {
 		 */
 		http
 			.csrf(
-				AbstractHttpConfigurer::disable) // rest 에서는 cookie, session 을 사용하지 않기때문에 disable 처리, disable 하지 않으면 rest api 요청시 403 에러 발생
-			.addFilterBefore(new JwtAuthenticationCustomFilter(jwtCustomProvider, SECRET_KEY),
+				AbstractHttpConfigurer::disable) // rest 에서는 cookie, session 을 사용하지 않기때문에 disable 처리, disable 하지 않으면 rest api 요청시 csrf token 이 없어 403 에러 발생
+			.addFilterBefore(new CustomJwtAuthenticationFilter(customJwtProvider, SECRET_KEY),
 				UsernamePasswordAuthenticationFilter.class)
 			.authorizeHttpRequests(authorizeRequests ->
 				authorizeRequests

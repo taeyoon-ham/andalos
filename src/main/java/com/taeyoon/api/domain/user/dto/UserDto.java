@@ -1,6 +1,7 @@
 package com.taeyoon.api.domain.user.dto;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -25,6 +26,8 @@ public class UserDto implements UserDetails {
 	private String email;
 	private String countryCode;
 	private String telNo;
+	private AccountDto accountDto;
+	private Date regDate;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

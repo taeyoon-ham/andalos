@@ -6,7 +6,7 @@ import com.taeyoon.api.domain.user.model.MemberEntity;
 import com.taeyoon.api.domain.user.model.enumclass.EnumMemberStatus;
 import com.taeyoon.api.infra.persistence.UserRepositoryHelper;
 
-public class AdminCreation extends DefaultUserCreationFactory {
+public class AdminCreation extends DefaultUserCreation {
 	public AdminCreation(UserRepositoryHelper userRepositoryHelper) {
 		super(userRepositoryHelper);
 	}

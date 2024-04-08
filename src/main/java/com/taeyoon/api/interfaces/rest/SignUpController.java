@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.taeyoon.api.application.dto.SignUpDto;
+import com.taeyoon.api.application.exception.EmailDuplicationException;
 import com.taeyoon.api.application.service.UserService;
 import com.taeyoon.api.infra.exception.client.BadRequestException;
-import com.taeyoon.api.infra.exception.client.EmailDuplicationException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,10 +33,10 @@ public class SignUpController extends CommonController {
 	@Tag(name = "회원인증 API")
 	@Operation(summary = "로그인", description = "로그인을 합니다.")
 	@PostMapping(value = "/service/v1/sign-up", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<EntityModel<SignUpDto.ResSignUp>> signUp(@RequestBody @Valid SignUpDto.ReqSignUp req) {
+	public ResponseEntity<EntityModel<SignUpDto.SignUpRes>> signUp(@RequestBody @Valid SignUpDto.SignUpReq req) {
 		Link selfLink = linkTo(methodOn(SignUpController.class).signUp(req)).withSelfRel().withType("POST");
 		try {
-			SignUpDto.ResSignUp res = userService.create(req);
+			SignUpDto.SignUpRes res = userService.create(req);
 			return res(EntityModel.of(res).add(selfLink));
 		} catch (EmailDuplicationException ex) {
 			throw new BadRequestException(ex.getMessage(), List.of(selfLink));

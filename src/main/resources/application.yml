@@ -6,6 +6,8 @@ spring:
     name: andalos
   profiles:
     default: dev
+  messages:
+    encoding: UTF-8
   devtools:
     livereload:
       enabled: true # 정적 리소스에 변화가 있을 때 바로 반영한다.
