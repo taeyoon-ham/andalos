@@ -1,26 +1,29 @@
 package com.taeyoon.api.application.exception;
 
+import lombok.Getter;
+
+@Getter
 public class EmailDuplicationException extends RuntimeException {
 
-	private final String[] messageArgs;
+	private final String[] msgArgs;
 
 	public EmailDuplicationException() {
 		super();
-		this.messageArgs = new String[0];
+		this.msgArgs = new String[0];
 	}
 
 	public EmailDuplicationException(String msg, Throwable t) {
 		super(msg, t);
-		this.messageArgs = new String[0];
+		this.msgArgs = new String[0];
 	}
 
 	public EmailDuplicationException(String msg) {
 		super(msg);
-		messageArgs = new String[0];
+		msgArgs = new String[0];
 	}
 
-	public EmailDuplicationException(String msg, String... messageArgs) {
+	public EmailDuplicationException(String msg, String... msgArgs) {
 		super(msg);
-		this.messageArgs = messageArgs;
+		this.msgArgs = msgArgs;
 	}
 }

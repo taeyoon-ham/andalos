@@ -39,7 +39,7 @@ public class CustomJwtProvider {
 			.compact();
 	}
 
-	private static String getSubject(String token, String secretKey) {
+	public static String getSubject(String token, String secretKey) {
 		secretKey = getBase64EncodeSecretKey(secretKey);
 		return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody().getSubject();
 	}

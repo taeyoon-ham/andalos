@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.taeyoon.api.domain.user.creation.MemberEmailAccountCreationTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-04-08T08:10:35" hostname="DESKTOP-T8I0KQT" time="0.515">
+<testsuite name="com.taeyoon.api.domain.user.creation.MemberEmailAccountCreationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2024-04-08T15:22:11" hostname="DESKTOP-T8I0KQT" time="0.832">
   <properties/>
-  <testcase name="정상처리" classname="com.taeyoon.api.domain.user.creation.MemberEmailAccountCreationTest" time="0.515"/>
-  <system-out><![CDATA[08:10:35.883 [Test worker] INFO com.taeyoon.api.domain.user.creation.MemberEmailAccountCreation -- 필수항목 체크
-08:10:35.891 [Test worker] INFO com.taeyoon.api.domain.user.creation.MemberEmailAccountCreation -- 이메일 중복 체크
-08:10:35.894 [Test worker] INFO com.taeyoon.api.domain.user.creation.MemberEmailAccountCreation -- dto, MemberDto(super=UserDto(id=null, firstName=길동, lastName=홍, email=example@gmail.com, countryCode=+82, telNo=01035233696, accountDto=com.taeyoon.api.domain.user.dto.AccountDto@3762c4fc, regDate=null), statusCode=null)
+  <testcase name="파라메터 유효청 체크 - firstName 에러발생" classname="com.taeyoon.api.domain.user.creation.MemberEmailAccountCreationTest" time="0.794"/>
+  <testcase name="이메일중복 체크" classname="com.taeyoon.api.domain.user.creation.MemberEmailAccountCreationTest" time="0.02"/>
+  <testcase name="정상처리" classname="com.taeyoon.api.domain.user.creation.MemberEmailAccountCreationTest" time="0.011"/>
+  <system-out><![CDATA[04-08 15:22:12.478  INFO [Test worker] c.t.a.d.u.c.MemberEmailAccountCreation   | 필수항목 체크
+04-08 15:22:12.510  INFO [Test worker] c.t.a.d.u.c.MemberEmailAccountCreation   | 필수항목 체크
+04-08 15:22:12.511  INFO [Test worker] c.t.a.d.u.c.MemberEmailAccountCreation   | 이메일 중복 체크
+04-08 15:22:12.529  INFO [Test worker] c.t.a.d.u.c.MemberEmailAccountCreation   | 필수항목 체크
+04-08 15:22:12.530  INFO [Test worker] c.t.a.d.u.c.MemberEmailAccountCreation   | 이메일 중복 체크
 ]]></system-out>
-  <system-err><![CDATA[WARNING: A Java agent has been loaded dynamically (C:\Users\taeyoon\.gradle\caches\modules-2\files-2.1\net.bytebuddy\byte-buddy-agent\1.14.12\be4984cb6fd1ef1d11f218a648889dfda44b8a15\byte-buddy-agent-1.14.12.jar)
-WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
-WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
-WARNING: Dynamic loading of agents will be disallowed by default in a future release
-]]></system-err>
+  <system-err><![CDATA[]]></system-err>
 </testsuite>

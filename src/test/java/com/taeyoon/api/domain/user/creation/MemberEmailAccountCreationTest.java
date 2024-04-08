@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
 
 import java.util.Locale;
+import java.util.Optional;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -20,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.i18n.LocaleContextHolder;
 
+import com.taeyoon.api.application.exception.EmailDuplicationException;
 import com.taeyoon.api.domain.user.dto.AccountDto;
 import com.taeyoon.api.domain.user.dto.MemberDto;
 import com.taeyoon.api.domain.user.dto.UserDto;
@@ -95,6 +97,21 @@ class MemberEmailAccountCreationTest {
 
 	@Test
 	@Order(2)
+	@DisplayName("이메일중복 체크")
+	void emailDuplication() {
+		userDto.setFirstName("길동");
+		UserRepositoryHelper userRepositoryHelper = new UserRepositoryHelper(memberRepository, adminRepository,
+			accountRepository, modelMapper);
+		when(userRepositoryHelper.getMemberRepository().findByEmail(userDto.getEmail())).thenReturn(
+			Optional.of(MemberEntity.builder().email(userDto.getEmail()).build()));
+		UserCreation userCreation = new MemberEmailAccountCreation(userRepositoryHelper);
+		EmailDuplicationException exception = assertThrows(EmailDuplicationException.class,
+			() -> userCreation.create(userDto));
+		assertEquals(MsgConsts.ERROR_EMAIL_DUPLICATED, exception.getMessage());
+	}
+
+	@Test
+	@Order(3)
 	@DisplayName("정상처리")
 	void create() {
 		userDto.setFirstName("길동");
