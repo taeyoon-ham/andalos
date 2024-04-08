@@ -31,7 +31,7 @@ public class SignUpController extends CommonController {
 	private final UserService userService;
 
 	@Tag(name = "회원인증 API")
-	@Operation(summary = "로그인", description = "로그인을 합니다.")
+	@Operation(summary = "회원가입", description = "회원가입을 합니다.")
 	@PostMapping(value = "/service/v1/sign-up", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<EntityModel<SignUpDto.SignUpRes>> signUp(@RequestBody @Valid SignUpDto.SignUpReq req) {
 		Link selfLink = linkTo(methodOn(SignUpController.class).signUp(req)).withSelfRel().withType("POST");
