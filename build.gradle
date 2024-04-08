@@ -91,6 +91,16 @@ jacocoTestReport {
         csv.required = false
         html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
     }
+    afterEvaluate {
+        classDirectories.setFrom(
+                files(classDirectories.files.collect {
+                    fileTree(dir: it, excludes: [
+                            '**/*Application.class',
+                            '**/infra/configuration/*Config.class'
+                    ])
+                })
+        )
+    }
     finalizedBy(tasks.jacocoTestCoverageVerification)
 }
 
@@ -99,15 +109,15 @@ jacocoTestCoverageVerification {
         rule {
             enabled = true
             element = "CLASS"
-            excludes = [                 // ' ',' ' 형태로 입력
-            ]
-
-
             limit {
                 counter = "METHOD"
                 value = "COVEREDRATIO"
                 minimum = "0.0".toBigDecimal()
             }
+            excludes = [
+                    '**/*Application',
+                    '**/infra/configuration/*Config'
+            ]
         }
     }
 }

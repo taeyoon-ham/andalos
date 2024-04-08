@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.taeyoon.api.domain.user.creation.MemberEmailAccountCreationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2024-04-08T15:22:11" hostname="DESKTOP-T8I0KQT" time="0.832">
+<testsuite name="com.taeyoon.api.domain.user.creation.MemberEmailAccountCreationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2024-04-08T15:49:19" hostname="DESKTOP-T8I0KQT" time="0.763">
   <properties/>
-  <testcase name="파라메터 유효청 체크 - firstName 에러발생" classname="com.taeyoon.api.domain.user.creation.MemberEmailAccountCreationTest" time="0.794"/>
-  <testcase name="이메일중복 체크" classname="com.taeyoon.api.domain.user.creation.MemberEmailAccountCreationTest" time="0.02"/>
-  <testcase name="정상처리" classname="com.taeyoon.api.domain.user.creation.MemberEmailAccountCreationTest" time="0.011"/>
-  <system-out><![CDATA[04-08 15:22:12.478  INFO [Test worker] c.t.a.d.u.c.MemberEmailAccountCreation   | 필수항목 체크
-04-08 15:22:12.510  INFO [Test worker] c.t.a.d.u.c.MemberEmailAccountCreation   | 필수항목 체크
-04-08 15:22:12.511  INFO [Test worker] c.t.a.d.u.c.MemberEmailAccountCreation   | 이메일 중복 체크
-04-08 15:22:12.529  INFO [Test worker] c.t.a.d.u.c.MemberEmailAccountCreation   | 필수항목 체크
-04-08 15:22:12.530  INFO [Test worker] c.t.a.d.u.c.MemberEmailAccountCreation   | 이메일 중복 체크
+  <testcase name="파라메터 유효청 체크 - firstName 에러발생" classname="com.taeyoon.api.domain.user.creation.MemberEmailAccountCreationTest" time="0.728"/>
+  <testcase name="이메일중복 체크" classname="com.taeyoon.api.domain.user.creation.MemberEmailAccountCreationTest" time="0.018"/>
+  <testcase name="정상처리" classname="com.taeyoon.api.domain.user.creation.MemberEmailAccountCreationTest" time="0.009"/>
+  <system-out><![CDATA[04-08 15:49:20.624  INFO [Test worker] c.t.a.d.u.c.MemberEmailAccountCreation   | 필수항목 체크
+04-08 15:49:20.655  INFO [Test worker] c.t.a.d.u.c.MemberEmailAccountCreation   | 필수항목 체크
+04-08 15:49:20.655  INFO [Test worker] c.t.a.d.u.c.MemberEmailAccountCreation   | 이메일 중복 체크
+04-08 15:49:20.672  INFO [Test worker] c.t.a.d.u.c.MemberEmailAccountCreation   | 필수항목 체크
+04-08 15:49:20.673  INFO [Test worker] c.t.a.d.u.c.MemberEmailAccountCreation   | 이메일 중복 체크
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
