@@ -81,6 +81,7 @@ class CustomJwtProviderTest {
 		when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn("Bearer " + token);
 		String resolveToken = CustomJwtProvider.resolveToken(request);
 		assertEquals(token, resolveToken);
+		// SecurityContextHolderFilter
 	}
 
 	@Test

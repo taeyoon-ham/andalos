@@ -19,8 +19,8 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
-//@EnableWebSecurity(debug = true)
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
+// @EnableWebSecurity
 public class SecurityConfig {
 
 	@Value("${jwt.default-secret-key}")
@@ -37,11 +37,15 @@ public class SecurityConfig {
 		 *  /api/admin   url 은 어드민
 		 *  와 같은 url 을 서비스별로 분리하여 사용할 때
 		 */
+
 		http
+			.httpBasic(AbstractHttpConfigurer::disable)
 			.csrf(
 				AbstractHttpConfigurer::disable) // rest 에서는 cookie, session 을 사용하지 않기때문에 disable 처리, disable 하지 않으면 rest api 요청시 csrf token 이 없어 403 에러 발생
+			.sessionManagement(AbstractHttpConfigurer::disable)
 			.addFilterBefore(new CustomJwtAuthenticationFilter(customJwtProvider, SECRET_KEY),
 				UsernamePasswordAuthenticationFilter.class)
+			.securityMatcher("/api/**")
 			.authorizeHttpRequests(authorizeRequests ->
 				authorizeRequests
 					.requestMatchers(
